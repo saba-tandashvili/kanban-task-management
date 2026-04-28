@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
-import Ellipsis from "../assets/icon-vertical-ellipsis.svg";
-import Delete from "../assets/icon-cross.svg";
+import Details from "./Details";
+import DeleteTask from "./DeleteTask";
+import EditTask from "./EditTask";
+import New from "./New";
+import NewBoard from "./NewBoard";
+import EditBoard from "./EditBoard";
+import DeleteBoard from "./DeleteBoard";
+import Kanban from "./Kanban";
 
 export default function Tasks({
   dark,
@@ -146,38 +152,38 @@ export default function Tasks({
   };
 
   const addNewBoard = () => {
-  const trimmedName = newBoard.name.trim();
+    const trimmedName = newBoard.name.trim();
 
-  if (!trimmedName) return;
+    if (!trimmedName) return;
 
-  const boardExists = task.some(
-    (b) => b.name.toLowerCase() === trimmedName.toLowerCase(),
-  );
+    const boardExists = task.some(
+      (b) => b.name.toLowerCase() === trimmedName.toLowerCase(),
+    );
 
-  if (boardExists) {
-    alert("A board with this name already exists.");
-    return;
-  }
+    if (boardExists) {
+      alert("A board with this name already exists.");
+      return;
+    }
 
-  const formattedBoard = {
-    name: trimmedName,
-    columns: newBoard.columns.map((col) => ({
-      name: col,
-      tasks: [],
-    })),
+    const formattedBoard = {
+      name: trimmedName,
+      columns: newBoard.columns.map((col) => ({
+        name: col,
+        tasks: [],
+      })),
+    };
+
+    setTask((prev) => [...prev, formattedBoard]);
+
+    setBoard(trimmedName);
+
+    setNewBoard({
+      name: "",
+      columns: ["Todo", "Doing"],
+    });
+
+    setShowNewBoard(false);
   };
-
-  setTask((prev) => [...prev, formattedBoard]);
-
-  setBoard(trimmedName);
-
-  setNewBoard({
-    name: "",
-    columns: ["Todo", "Doing"],
-  });
-
-  setShowNewBoard(false);
-};
 
   const editBoardFunction = () => {
     if (!editBoard.name.trim()) return;
@@ -295,7 +301,6 @@ export default function Tasks({
       }),
     );
 
-    // update UI immediately
     setSelectedTask(updatedTask);
     setActiveTask(updatedTask);
     setShowEditTask(false);
@@ -304,615 +309,84 @@ export default function Tasks({
   return (
     <>
       <div className="kanban">
-        <div className="details-div">
-          <div
-            className={`${showDetails ? "black" : "close-black black"}`}
-            onClick={() => {
-              setShowDetails(false);
-            }}
-          ></div>
-          <div
-            className={`${showDetails ? "details" : "close-details details"} ${dark ? "dark" : ""}`}
-          >
-            {selectedTask && (
-              <>
-                <div className="title">
-                  <h1 style={{ color: dark ? "white" : "" }}>
-                    {selectedTask.title}
-                  </h1>
-                  <img
-                    src={Ellipsis}
-                    alt=""
-                    onClick={() => {
-                      setTaskOptions((prev) => !prev);
-                      setActiveTask(selectedTask);
-                    }}
-                  />
-                  <div
-                    className="options"
-                    style={{
-                      display: taskOptions ? "" : "none",
-                      backgroundColor: dark ? "#20212c" : "white",
-                      boxShadow: dark ? "none" : "",
-                    }}
-                  >
-                    <p
-                      onClick={() => {
-                        setShowEditTask(true);
-                        setTaskOptions(false);
-                        setShowDetails(false);
-                      }}
-                    >
-                      Edit Task
-                    </p>
+        <Details
+          updateSubtask={updateSubtask}
+          showDetails={showDetails}
+          setShowDetails={setShowDetails}
+          taskOptions={taskOptions}
+          setTaskOptions={setTaskOptions}
+          dark={dark}
+          selectedTask={selectedTask}
+          setActiveTask={setActiveTask}
+          setShowEditTask={setShowEditTask}
+          setShowDeleteTask={setShowDeleteTask}
+          getUpdatedStatus={getUpdatedStatus}
+          setSelectedTask={setSelectedTask}
+          setTask={setTask}
+          Board={Board}
+        />
 
-                    <span
-                      onClick={() => {
-                        setShowDeleteTask(true);
-                        setTaskOptions(false);
-                        setShowDetails(false);
-                      }}
-                    >
-                      Delete Task
-                    </span>
-                  </div>
-                </div>
-                <p className="desc">{selectedTask.description}</p>
+        <DeleteTask
+          handleDeleteTask={handleDeleteTask}
+          showDeleteTask={showDeleteTask}
+          setShowDeleteTask={setShowDeleteTask}
+          dark={dark}
+          selectedTask={selectedTask}
+        />
 
-                <div className="subtasks">
-                  <p>
-                    Subtasks (
-                    {
-                      selectedTask.subtasks.filter((st) => st.isCompleted)
-                        .length
-                    }{" "}
-                    of {selectedTask.subtasks.length})
-                  </p>
+        <EditTask
+          showEditTask={showEditTask}
+          setShowEditTask={setShowEditTask}
+          dark={dark}
+          handleEditTask={handleEditTask}
+          activeTask={activeTask}
+          setActiveTask={setActiveTask}
+          Board={Board}
+        />
 
-                  {selectedTask.subtasks.map((st, i) => (
-                    <div
-                      key={i}
-                      style={{ backgroundColor: dark ? "#20212c" : "" }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={st.isCompleted}
-                        onChange={() => {
-                          updateSubtask(selectedTask.title, i);
+        <New
+          showNew={showNew}
+          setShowNew={setShowNew}
+          dark={dark}
+          newTask={newTask}
+          setNewTask={setNewTask}
+          Board={Board}
+          addNewTask={addNewTask}
+        />
 
-                          const updated = {
-                            ...selectedTask,
-                            subtasks: selectedTask.subtasks.map((sub, index) =>
-                              index === i
-                                ? { ...sub, isCompleted: !sub.isCompleted }
-                                : sub,
-                            ),
-                          };
+        <NewBoard
+          showNewBoard={showNewBoard}
+          setShowNewBoard={setShowNewBoard}
+          dark={dark}
+          newBoard={newBoard}
+          setNewBoard={setNewBoard}
+          addNewBoard={addNewBoard}
+        />
 
-                          updated.status = getUpdatedStatus(updated.subtasks);
+        <EditBoard
+          showEditBoard={showEditBoard}
+          setShowEditBoard={setShowEditBoard}
+          dark={dark}
+          editBoard={editBoard}
+          setEditBoard={setEditBoard}
+          editBoardFunction={editBoardFunction}
+        />
 
-                          setSelectedTask(updated);
-                        }}
-                        className="custom-checkbox"
-                      />
-                      <span
-                        className={st.isCompleted ? "completed" : ""}
-                        style={{ color: dark ? "white" : "" }}
-                      >
-                        {st.title}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+        <DeleteBoard
+          showDelete={showDelete}
+          setShowDelete={setShowDelete}
+          dark={dark}
+          board={board}
+          deleteBoardFunction={deleteBoardFunction}
+        />
 
-                <div className="status">
-                  <h3>Current Status</h3>
-
-                  <select
-                    value={selectedTask.status}
-                    onChange={(e) => {
-                      const newStatus = e.target.value;
-
-                      const updatedTask = {
-                        ...selectedTask,
-                        status: newStatus,
-                      };
-
-                      setSelectedTask(updatedTask);
-
-                      setTask((prev) =>
-                        prev.map((b) => {
-                          const updatedColumns = b.columns.map((col) => {
-                            const filteredTasks = col.tasks.filter(
-                              (t) => t.title !== selectedTask.title,
-                            );
-
-                            if (col.name === newStatus) {
-                              return {
-                                ...col,
-                                tasks: [...filteredTasks, updatedTask],
-                              };
-                            }
-
-                            return {
-                              ...col,
-                              tasks: filteredTasks,
-                            };
-                          });
-
-                          return { ...b, columns: updatedColumns };
-                        }),
-                      );
-                    }}
-                    style={{
-                      backgroundColor: dark ? "#20212c" : "white",
-                      color: dark ? "white" : "black",
-                      padding: "8px",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    {Board?.columns.map((col) => (
-                      <option key={col.name} value={col.name}>
-                        <p>{col.name}</p>
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="delete-task-div">
-          <div
-            className={`${showDeleteTask ? "black" : "close-black black"}`}
-            onClick={() => {
-              setShowDeleteTask(false);
-            }}
-          ></div>
-          <div
-            className={`${showDeleteTask ? "delete-task" : "close-delete-task delete-task"} ${dark ? "dark" : ""}`}
-          >
-            <h1>Delete this task?</h1>
-            <p>
-              Are you sure you want to delete the ‘{selectedTask?.title}’ task
-              and its subtasks? This action cannot be reversed.
-            </p>
-            <div className="buttons">
-              <button onClick={handleDeleteTask} className="delete">
-                Delete
-              </button>
-              <button
-                onClick={() => setShowDeleteTask(false)}
-                className="cancel"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {activeTask && (
-          <div className="edit-task-div">
-            <div
-              className={`${showEditTask ? "black" : "close-black black"}`}
-              onClick={() => {
-                setShowEditTask(false);
-              }}
-            ></div>
-            <div
-              className={`${showEditTask ? "edit-task" : "close-edit-task edit-task"} ${dark ? "dark" : ""}`}
-            >
-              <h2 style={{ color: dark ? "white" : "" }}>Edit Task</h2>
-
-              <div className="info">
-                <h3 style={{ color: dark ? "white" : "" }}>Title</h3>
-                <input
-                  type="text"
-                  value={activeTask.title}
-                  onChange={(e) =>
-                    setActiveTask({ ...activeTask, title: e.target.value })
-                  }
-                  placeholder="Title"
-                  style={{ color: dark ? "white" : "" }}
-                />
-              </div>
-
-              <div className="info">
-                <h3 style={{ color: dark ? "white" : "" }}>Description</h3>
-                <textarea
-                  value={activeTask.description}
-                  onChange={(e) =>
-                    setActiveTask({
-                      ...activeTask,
-                      description: e.target.value,
-                    })
-                  }
-                  placeholder="Description"
-                  style={{ color: dark ? "white" : "" }}
-                />
-              </div>
-
-              <div className="create-subtasks">
-                <p>Subtasks</p>
-
-                {activeTask.subtasks.map((sub, i) => (
-                  <div key={i}>
-                    <input
-                      type="text"
-                      value={sub.title}
-                      onChange={(e) => {
-                        const updated = [...activeTask.subtasks];
-                        updated[i].title = e.target.value;
-                        setActiveTask({ ...activeTask, subtasks: updated });
-                      }}
-                      style={{ color: dark ? "white" : "" }}
-                    />
-
-                    <img
-                      src={Delete}
-                      alt=""
-                      onClick={() => {
-                        const updated = activeTask.subtasks.filter(
-                          (_, index) => index !== i,
-                        );
-                        setActiveTask({ ...activeTask, subtasks: updated });
-                      }}
-                    />
-                  </div>
-                ))}
-
-                <button
-                  onClick={() =>
-                    setActiveTask({
-                      ...activeTask,
-                      subtasks: [
-                        ...activeTask.subtasks,
-                        { title: "", isCompleted: false },
-                      ],
-                    })
-                  }
-                  style={{ backgroundColor: dark ? "white" : "" }}
-                >
-                  + Add Subtask
-                </button>
-              </div>
-
-              <select
-                value={activeTask.status}
-                onChange={(e) =>
-                  setActiveTask({ ...activeTask, status: e.target.value })
-                }
-                className="status"
-                
-              >
-                {Board?.columns.map((col) => (
-                  <option key={col.name} value={col.name} >
-                    <h3 >{col.name}</h3>
-                  </option>
-                ))}
-              </select>
-
-              <button onClick={() => handleEditTask(activeTask)}>
-                Save Changes
-              </button>
-            </div>
-          </div>
-        )}
-        <div className="new-div">
-          <div
-            className={`${showNew ? "black" : "close-black black"}`}
-            onClick={() => {
-              setShowNew(false);
-            }}
-          ></div>
-          <div
-            className={`${showNew ? "new" : "close-new new"} ${dark ? "dark" : ""}`}
-          >
-            <h1 style={{ color: dark ? "white" : "" }}>Add New Task</h1>
-            <div className="info">
-              <h3>Title</h3>
-              <input
-                type="text"
-                placeholder="e.g. Take coffee break"
-                style={{ color: dark ? "white" : "" }}
-                value={newTask.title}
-                onChange={(e) =>
-                  setNewTask({ ...newTask, title: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="info">
-              <h3>Description</h3>
-              <textarea
-                placeholder="e.g. It’s always good to take a break. This 15 minute break will recharge the batteries a little."
-                style={{ color: dark ? "white" : "" }}
-                value={newTask.description}
-                onChange={(e) =>
-                  setNewTask({ ...newTask, description: e.target.value })
-                }
-              ></textarea>
-            </div>
-
-            <div className="create-subtasks">
-              <h3>Subtasks</h3>
-              {newTask.subtasks.map((sub, i) => (
-                <div key={i} className="subtask-subtask">
-                  <input
-                    type="text"
-                    value={sub}
-                    onChange={(e) => {
-                      const updated = [...newTask.subtasks];
-                      updated[i] = e.target.value;
-                      setNewTask({ ...newTask, subtasks: updated });
-                    }}
-                    style={{ color: dark ? "white" : "" }}
-                  />
-                  <img
-                    src={Delete}
-                    alt=""
-                    onClick={() => {
-                      const updated = newTask.subtasks.filter(
-                        (_, index) => index !== i,
-                      );
-                      setNewTask({ ...newTask, subtasks: updated });
-                    }}
-                  />
-                </div>
-              ))}
-
-              <button
-                style={{ backgroundColor: dark ? "white" : "" }}
-                onClick={() =>
-                  setNewTask({
-                    ...newTask,
-                    subtasks: [...newTask.subtasks, ""],
-                  })
-                }
-              >
-                + Add New Subtask
-              </button>
-            </div>
-
-            <div className="info">
-              <h3>Status</h3>
-              <select
-                value={newTask.status}
-                onChange={(e) =>
-                  setNewTask({ ...newTask, status: e.target.value })
-                }
-                style={{
-                  backgroundColor: dark ? "#20212c" : "white",
-                  color: dark ? "white" : "black",
-                  padding: "8px",
-                  borderRadius: "6px",
-                }}
-              >
-                {Board?.columns.map((col) => (
-                  <option key={col.name} value={col.name}>
-                    {col.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button className="create" onClick={addNewTask}>
-              Create Task
-            </button>
-          </div>
-        </div>
-
-        <div className="new-board-div">
-          <div
-            className={`${showNewBoard ? "black" : "close-black black"}`}
-            onClick={() => {
-              setShowNewBoard(false);
-            }}
-          ></div>
-          <div
-            className={`${showNewBoard ? "new-board" : "close-new-board new-board"} ${dark ? "dark" : ""}`}
-          >
-            <h1 style={{ color: dark ? "white" : "" }}>Add New Board</h1>
-            <div className="info">
-              <h3>Board Name</h3>
-              <input
-                type="text"
-                placeholder="e.g. Web Design"
-                value={newBoard.name}
-                onChange={(e) =>
-                  setNewBoard({ ...newBoard, name: e.target.value })
-                }
-                style={{ color: dark ? "white" : "" }}
-              />
-            </div>
-
-            <div className="board-columns">
-              <h3>Board Columns</h3>
-              {newBoard.columns.map((col, i) => (
-                <div key={i}>
-                  <input
-                    type="text"
-                    value={col}
-                    onChange={(e) => {
-                      const updated = [...newBoard.columns];
-                      updated[i] = e.target.value;
-                      setNewBoard({ ...newBoard, columns: updated });
-                    }}
-                    style={{ color: dark ? "white" : "" }}
-                  />
-                  <img
-                    src={Delete}
-                    alt=""
-                    onClick={() => {
-                      const updated = newBoard.columns.filter(
-                        (_, index) => index !== i,
-                      );
-                      setNewBoard({ ...newBoard, columns: updated });
-                    }}
-                  />
-                </div>
-              ))}
-              <button
-                style={{ backgroundColor: dark ? "white" : "" }}
-                onClick={() =>
-                  setNewBoard({
-                    ...newBoard,
-                    columns: [...newBoard.columns, ""],
-                  })
-                }
-              >
-                + Add New Column
-              </button>
-            </div>
-            <button className="create" onClick={addNewBoard}>
-              Create New Board
-            </button>
-          </div>
-        </div>
-
-        <div className="edit-board-div">
-          <div
-            className={`${showEditBoard ? "black" : "close-black black"}`}
-            onClick={() => setShowEditBoard(false)}
-          ></div>
-
-          <div
-            className={`${showEditBoard ? "edit-board" : "close-edit-board edit-board"} ${
-              dark ? "dark" : ""
-            }`}
-          >
-            <h1 style={{ color: dark ? "white" : "" }}>Edit Board</h1>
-
-            <div className="info">
-              <h3>Board Name</h3>
-              <input
-                type="text"
-                value={editBoard.name}
-                onChange={(e) =>
-                  setEditBoard({ ...editBoard, name: e.target.value })
-                }
-                style={{ color: dark ? "white" : "" }}
-              />
-            </div>
-
-            <div className="board-columns">
-              <h3>Board Columns</h3>
-
-              {editBoard.columns.map((col, i) => (
-                <div key={i}>
-                  <input
-                    type="text"
-                    value={col}
-                    onChange={(e) => {
-                      const updated = [...editBoard.columns];
-                      updated[i] = e.target.value;
-                      setEditBoard({ ...editBoard, columns: updated });
-                    }}
-                    style={{ color: dark ? "white" : "" }}
-                  />
-
-                  <img
-                    src={Delete}
-                    alt=""
-                    onClick={() => {
-                      const updated = editBoard.columns.filter(
-                        (_, idx) => idx !== i,
-                      );
-                      setEditBoard({ ...editBoard, columns: updated });
-                    }}
-                  />
-                </div>
-              ))}
-
-              <button
-                style={{ backgroundColor: dark ? "white" : "" }}
-                onClick={() =>
-                  setEditBoard({
-                    ...editBoard,
-                    columns: [...editBoard.columns, ""],
-                  })
-                }
-              >
-                + Add New Column
-              </button>
-            </div>
-
-            <button className="create" onClick={editBoardFunction}>
-              Save Changes
-            </button>
-          </div>
-        </div>
-
-        <div className="delete-board-div">
-          <div
-            className={`${showDelete ? "black" : "close-black black"}`}
-            onClick={() => {
-              setShowDelete(false);
-            }}
-          ></div>
-          <div
-            className={`${showDelete ? "delete-board" : "close-delete-board delete-board"} ${dark ? "dark" : ""}`}
-          >
-            <h1>Delete This Board?</h1>
-            <p>
-              Are you sure you want to delete the {board} board? This action
-              will remove all columns and tasks and cannot be reversed.
-            </p>
-            <div className="buttons">
-              <button className="delete" onClick={deleteBoardFunction}>
-                Delete
-              </button>
-              <button className="cancel" onClick={() => setShowDelete(false)}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="kanban-columns-divs">
-          {Board?.columns.map((column, index) => (
-            <div key={column.name} className="tasks-div">
-              <div className="title">
-                <div className={`color${index} color`}></div>
-                <h3>
-                  {column.name} {`(${column.tasks.length})`}
-                </h3>
-              </div>
-
-              {column.tasks.map((task) => {
-                const completed = task.subtasks.filter(
-                  (st) => st.isCompleted,
-                ).length;
-                const total = task.subtasks.length;
-
-                return (
-                  <div
-                    key={task.title}
-                    className="task"
-                    onClick={() => {
-                      setSelectedTask(task);
-                      setShowDetails(true);
-                    }}
-                    style={{ backgroundColor: dark ? "#2B2C37" : "white" }}
-                  >
-                    <p className={`${dark ? "whiteP" : ""}`}>{task.title}</p>
-
-                    <span>
-                      {completed} of {total} subtasks
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-          <div
-            className={`new-column ${!dark ? "column-white" : ""}`}
-            onClick={addNewColumnToBoard}
-          >
-            <h1>+ New Column</h1>
-          </div>
-        </div>
+        <Kanban
+          Board={Board}
+          setSelectedTask={setSelectedTask}
+          setShowDetails={setShowDetails}
+          dark={dark}
+          addNewColumnToBoard={addNewColumnToBoard}
+        />
       </div>
     </>
   );
