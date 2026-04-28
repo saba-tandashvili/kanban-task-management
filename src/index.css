@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+*{
+  font-family: 'Plus Jakarta Sans';
+  box-sizing: border-box;
+  margin: 0;
+  transition: 0.2s;
+}
+
+body{
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.toggle {
+  display: inline-block;
+  position: relative;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  width: 40px;
+  height: 20px;
+  background-color: #635FC7;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: 0.2s;
+  display: block;
+}
+
+.slider:hover {
+  background-color: #A8A4FF;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background-color: #fff;
+  border-radius: 50%;
+  top: 49%;
+  left: 3px;
+  transform: translate(21px, -50%);
+  transition: 0.2s;
+}
+
+
+.toggle input:checked + .slider::before {
+  left: -18px;
+}
+
+.custom-checkbox {
+  appearance: none;
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 2px;
+  background-color: white;
+  border: 1px solid #828FA33F;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+}
+
+.custom-checkbox:checked {
+  background-color: #635FC7;
+  border: none;
+}
+
+.custom-checkbox::after {
+  content: "";
+  width: 7px;
+  height: 3.5px;
+  border: 2px solid white;
+  border-top: none;
+  border-right: none;
+  transform: rotate(-45deg) scale(0);
+  transition: transform 0.1s ease-in-out;
+}
+
+.custom-checkbox:checked::after {
+  transform: rotate(-45deg) scale(1);
+}
+
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #f4f7fd;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #a8a4ff;
+  border-radius: 999px;
+}
+
+
+
+body.dark::-webkit-scrollbar-track {
+  background: #20212c;
+}
+
+body.dark::-webkit-scrollbar-thumb {
+  background: #6b6b6b;
+}
+
+
+
+
+
+.kanban::-webkit-scrollbar {
+  height: 8px;
+}
+
+.kanban::-webkit-scrollbar-track {
+  background: #f4f7fd;
+}
+
+.kanban::-webkit-scrollbar-thumb {
+  background: #a8a4ff;
+  border-radius: 999px;
+}
+
+body.dark .kanban::-webkit-scrollbar-track {
+  background: #20212c;
+}
+
+body.dark .kanban::-webkit-scrollbar-thumb {
+  background: #6b6b6b;
+}
