@@ -33,7 +33,6 @@ export default function EditTask({
                 value={activeTask.title}
                 onChange={(e) => {
                   setActiveTask({ ...activeTask, title: e.target.value });
-                  setShowEditTask(true);
                 }}
                 placeholder="Title"
                 style={{ color: dark ? "white" : "" }}
