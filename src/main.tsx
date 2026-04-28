@@ -6,7 +6,7 @@ import Data from "./data.json"
 import Main from "./pages/Platform";
 
 export function AppWrapper() {
-  const [dark, setDark] = useState(false)
+  const [dark, setDark] = useState(true)
   const [task, setTask] = useState<Board[]>(Data.boards)
 
   const router = createBrowserRouter([
