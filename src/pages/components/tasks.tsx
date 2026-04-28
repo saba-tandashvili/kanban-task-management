@@ -146,27 +146,38 @@ export default function Tasks({
   };
 
   const addNewBoard = () => {
-    if (!newBoard.name.trim()) return;
+  const trimmedName = newBoard.name.trim();
 
-    const formattedBoard = {
-      name: newBoard.name,
-      columns: newBoard.columns.map((col) => ({
-        name: col,
-        tasks: [],
-      })),
-    };
+  if (!trimmedName) return;
 
-    setTask((prev) => [...prev, formattedBoard]);
+  const boardExists = task.some(
+    (b) => b.name.toLowerCase() === trimmedName.toLowerCase(),
+  );
 
-    setBoard(newBoard.name);
+  if (boardExists) {
+    alert("A board with this name already exists.");
+    return;
+  }
 
-    setNewBoard({
-      name: "",
-      columns: ["Todo", "Doing"],
-    });
-
-    setShowNewBoard(false);
+  const formattedBoard = {
+    name: trimmedName,
+    columns: newBoard.columns.map((col) => ({
+      name: col,
+      tasks: [],
+    })),
   };
+
+  setTask((prev) => [...prev, formattedBoard]);
+
+  setBoard(trimmedName);
+
+  setNewBoard({
+    name: "",
+    columns: ["Todo", "Doing"],
+  });
+
+  setShowNewBoard(false);
+};
 
   const editBoardFunction = () => {
     if (!editBoard.name.trim()) return;
