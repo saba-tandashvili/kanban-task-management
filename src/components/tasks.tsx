@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Ellipsis from "../../assets/icon-vertical-ellipsis.svg";
-import Delete from "../../assets/icon-cross.svg";
+import Ellipsis from "../assets/icon-vertical-ellipsis.svg";
+import Delete from "../assets/icon-cross.svg";
 
 export default function Tasks({
   dark,

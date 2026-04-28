@@ -1,10 +1,10 @@
-import Board from "../../assets/icon-board.svg";
-import BoardP from "../../assets/icon-board-purple.svg";
-import BoardW from "../../assets/icon-board-white.svg";
-import Light from "../../assets/icon-light-theme.svg";
-import Dark from "../../assets/icon-dark-theme.svg";
-import Hide from "../../assets/icon-hide-sidebar.svg";
-import Open from "../../assets/icon-show-sidebar.svg";
+import Board from "../assets/icon-board.svg";
+import BoardP from "../assets/icon-board-purple.svg";
+import BoardW from "../assets/icon-board-white.svg";
+import Light from "../assets/icon-light-theme.svg";
+import Dark from "../assets/icon-dark-theme.svg";
+import Hide from "../assets/icon-hide-sidebar.svg";
+import Open from "../assets/icon-show-sidebar.svg";
 
 export default function Sidebar({
   dark,

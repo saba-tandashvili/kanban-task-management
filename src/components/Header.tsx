@@ -1,14 +1,14 @@
 import { useState } from "react";
-import LogoD from "../../assets/logo-dark.svg";
-import LogoL from "../../assets/logo-light.svg";
-import LogoMobile from "../../assets/logo-mobile.svg";
-import Ellipsis from "../../assets/icon-vertical-ellipsis.svg";
-import ArrowDown from "../../assets/icon-chevron-down.svg"
-import Board from "../../assets/icon-board.svg";
-import BoardW from "../../assets/icon-board-white.svg";
-import BoardP from "../../assets/icon-board-purple.svg";
-import Light from "../../assets/icon-light-theme.svg";
-import Dark from "../../assets/icon-dark-theme.svg";
+import LogoD from "../assets/logo-dark.svg";
+import LogoL from "../assets/logo-light.svg";
+import LogoMobile from "../assets/logo-mobile.svg";
+import Ellipsis from "../assets/icon-vertical-ellipsis.svg";
+import ArrowDown from "../assets/icon-chevron-down.svg"
+import Board from "../assets/icon-board.svg";
+import BoardW from "../assets/icon-board-white.svg";
+import BoardP from "../assets/icon-board-purple.svg";
+import Light from "../assets/icon-light-theme.svg";
+import Dark from "../assets/icon-dark-theme.svg";
 
 export default function Header({
   dark,

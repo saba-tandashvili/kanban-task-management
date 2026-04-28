@@ -1,8 +1,8 @@
 import "./platform.css";
 import { useState, useEffect } from "react";
-import Sidebar from "./components/Sidebar";
-import Tasks from "./components/tasks";
-import Header from "./components/Header";
+import Sidebar from "../components/Sidebar";
+import Tasks from "../components/tasks";
+import Header from "../components/Header";
 
 export default function Main({ dark, setDark, task, setTask }: MainProps) {
   const [sidebar, setSidebar] = useState(false);
