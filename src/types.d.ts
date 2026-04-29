@@ -103,11 +103,14 @@ type Subtask = {
 };
 
 type Task = {
+  id: string;
   title: string;
   description: string;
   status: string;
   subtasks: Subtask[];
 };
+
+
 
 type Column = {
   name: string;

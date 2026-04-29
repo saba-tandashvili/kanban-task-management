@@ -113,7 +113,8 @@ export default function Tasks({
   const addNewTask = () => {
     if (!newTask.title.trim()) return;
 
-    const formattedTask = {
+    const formattedTask: Task = {
+      id: crypto.randomUUID(),
       title: newTask.title,
       description: newTask.description,
       status: newTask.status,
@@ -275,28 +276,29 @@ export default function Tasks({
   }
 
   function handleEditTask(updatedTask: Task) {
-    if (!activeTask) return;
-
     setTask((prev) =>
-      prev.map((b) => {
-        if (b.name !== Board?.name) return b;
-
-        const cleanedColumns = b.columns.map((col) => ({
-          ...col,
-          tasks: col.tasks.filter((t) => t.title !== activeTask.title),
-        }));
-
-        const targetColumn = cleanedColumns.find(
-          (col) => col.name === updatedTask.status,
-        );
-
-        if (targetColumn) {
-          targetColumn.tasks.push(updatedTask);
-        }
+      prev.map((board) => {
+        if (board.name !== Board?.name) return board;
 
         return {
-          ...b,
-          columns: cleanedColumns,
+          ...board,
+          columns: board.columns.map((column) => {
+            const filteredTasks = column.tasks.filter(
+              (task) => task.id !== updatedTask.id,
+            );
+
+            if (column.name === updatedTask.status) {
+              return {
+                ...column,
+                tasks: [...filteredTasks, updatedTask],
+              };
+            }
+
+            return {
+              ...column,
+              tasks: filteredTasks,
+            };
+          }),
         };
       }),
     );

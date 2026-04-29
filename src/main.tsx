@@ -7,7 +7,17 @@ import Main from "./pages/Platform";
 
 export function AppWrapper() {
   const [dark, setDark] = useState(true)
-  const [task, setTask] = useState<Board[]>(Data.boards)
+const boardsWithIds: Board[] = Data.boards.map((board) => ({
+  ...board,
+  columns: board.columns.map((column) => ({
+    ...column,
+    tasks: column.tasks.map((task) => ({
+      ...task,
+      id: crypto.randomUUID(),
+    })),
+  })),
+}));
+  const [task, setTask] = useState(boardsWithIds);
 
   const router = createBrowserRouter([
 
